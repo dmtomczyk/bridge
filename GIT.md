@@ -6,16 +6,17 @@ This document defines the intended repository topology, dependency ownership, an
 
 ## Repository set
 
-We want 4 repositories total:
+We now have 5 repositories total:
 
 1. `bridge/` — thin workspace/meta repo
 2. `client/` — app/client repo
 3. `engine-custom/` — custom engine repo
-4. `engine-chromium/` — Chromium-backed engine repo
+4. `engine-chromium/` — Chromium-backed **reference** backend repo
+5. `engine-cef/` — active long-term Chromium backend target repo
 
 ## Recommended topology
 
-The root `bridge/` repo should track the three child repos as sibling submodules.
+The root `bridge/` repo should track the child repos as sibling submodules.
 
 ```mermaid
 flowchart TD
@@ -23,10 +24,12 @@ flowchart TD
     C[client repo]
     EC[engine-custom repo]
     ECH[engine-chromium repo]
+    ECEF[engine-cef repo]
 
     W -->|git submodule| C
     W -->|git submodule| EC
     W -->|git submodule| ECH
+    W -->|git submodule| ECEF
 ```
 
 ## Why the root workspace repo should own the submodules
@@ -75,10 +78,17 @@ Owns:
 
 ### `engine-chromium/`
 Owns:
-- Chromium-backed engine adapter
-- Chromium/Blink/V8 dependency ownership for that engine path
+- Chromium-backed **reference** engine adapter
+- Chromium/Blink/V8 dependency ownership for the headless/DevTools bring-up path
 - Chromium bootstrap/update/pin scripts and config
-- future real Chromium-backed engine integration
+- reference/demo backend maintenance
+
+### `engine-cef/`
+Owns:
+- CEF-backed engine/bootstrap code
+- CEF binary-distribution integration and runtime glue
+- the active long-term Chromium backend implementation path
+- future shell/backend migration work away from the screenshot reference path
 
 ## Dependency management layers
 
@@ -131,6 +141,7 @@ Owns:
 - `client`
 - `engine-custom`
 - `engine-chromium`
+- `engine-cef`
 
 ### No: do not submodule these
 - Chromium source tree

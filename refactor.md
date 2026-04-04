@@ -10,7 +10,7 @@ This document captures the current execution plan for getting from the transitio
 - `client/` — app/client repo
 - `engine-custom/` — custom engine repo
 - `engine-chromium/` — Chromium-backed **reference** engine repo
-- `engine-cef/` — active long-term Chromium backend target repo (currently local bootstrap repo, remote pending)
+- `engine-cef/` — active long-term Chromium backend target repo
 
 ## End-state model
 

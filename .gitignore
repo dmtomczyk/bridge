@@ -1,7 +1,5 @@
 _archive/
 artifacts/
-engine-cef/
-spikes/cef-embedder/build/
 .validate-*
 *.swp
 *.swo

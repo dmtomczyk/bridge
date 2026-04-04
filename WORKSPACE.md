@@ -2,11 +2,12 @@
 
 ## Purpose
 
-`~/code/foss/bridge/` is the parent workspace/meta repo for three sibling repositories:
+`~/code/foss/bridge/` is the parent workspace/meta repo for four sibling repositories:
 
 - `client`
 - `engine-custom`
 - `engine-chromium`
+- `engine-cef`
 
 See also:
 - `README.md` — quick workspace orientation
@@ -32,9 +33,15 @@ Owns:
 
 ### engine-chromium
 Owns:
-- Chromium-backed engine adapter
-- Chromium/Blink bring-up and engine plumbing
-- future real Chromium-based engine integration
+- Chromium-backed reference engine adapter
+- Chromium/Blink bring-up and engine plumbing for the headless/DevTools reference path
+- reference/demo backend maintenance
+
+### engine-cef
+Owns:
+- active long-term Chromium backend bootstrap and integration work
+- CEF binary-distribution bring-up
+- future shell/backend migration away from the screenshot reference path
 
 ## Current migration status
 
@@ -49,4 +56,7 @@ Owns:
 Old root-level monorepo content was moved to:
 - `_archive/root-pre-split-cleanup-2026-04-03/`
 
-That archive is transition safety, not the intended long-term structure.
+Additional historically useful but non-active planning/proof material may be moved under:
+- `historical/`
+
+The goal is to preserve context without cluttering the active workspace root.

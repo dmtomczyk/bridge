@@ -7,3 +7,6 @@
 [submodule "engine-chromium"]
 	path = engine-chromium
 	url = git@github.com:dmtomczyk/bridge-engine-chromium.git
+[submodule "engine-cef"]
+	path = engine-cef
+	url = git@github.com:dmtomczyk/bridge-cef.git
