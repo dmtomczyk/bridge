@@ -55,12 +55,19 @@ So treat the workspace shape as established, while treating some internal repo b
 
 ## Common commands
 
-Build via the client repo through the workspace wrapper:
+Build from the workspace root with engine/JS selection:
 
 ```bash
-./build.sh off
-./build.sh on --v8-include /path/to/v8/include --v8-lib /path/to/v8/out.gn/x64.release/obj
+./compile.sh --engine custom --js off
+./compile.sh --engine custom --js v8
+./compile.sh --engine chromium --js off
+./compile.sh --engine all --js both
 ```
+
+Notes:
+- `./build.sh` now forwards to `./compile.sh` for backward compatibility.
+- `--engine` changes the default target/test focus, so you do not have to rebuild every engine/test combination every time.
+- The current client CMake graph still configures both engine repos during configure time, but root-level compile selection now keeps build/test execution focused.
 
 Launch the client/browser app:
 
@@ -72,4 +79,33 @@ Check repo status:
 
 ```bash
 ./scripts/status.sh
+```
+
+Run the Chromium end-to-end smoke under Xvfb (launch app, trigger screenshot, verify session artifacts):
+
+```bash
+./scripts/chromium-e2e-smoke.sh
+./scripts/chromium-e2e-smoke.sh https://example.com
+```
+
+Run the Chromium interaction/key/page-reaction smokes under Xvfb:
+
+```bash
+# Enter key reaches Chromium and the page reacts (title changes to key:Enter)
+./scripts/chromium-input-smoke.sh
+
+# Tab moves focus between elements and the page reacts (title changes to b)
+./scripts/chromium-tab-smoke.sh
+
+# Printable text reaches Chromium input/editing path and the page reacts (title changes to bridge)
+./scripts/chromium-text-smoke.sh
+```
+
+Smoke-script notes:
+- Run these scripts serially, not in parallel. They discover the newest `client/artifacts/sessions/...` directory and will interfere with each other if launched at the same time.
+- To target the `v8-on` browser instead of the default `v8-off` browser, set `BRIDGE_BUILD_DIR`:
+
+```bash
+BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-e2e-smoke.sh https://example.com
+BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-input-smoke.sh
 ```
