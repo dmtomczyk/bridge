@@ -1,0 +1,9 @@
+[submodule "client"]
+	path = client
+	url = git@github.com:dmtomczyk/bridge-client.git
+[submodule "engine-custom"]
+	path = engine-custom
+	url = git@github.com:dmtomczyk/bridge-engine-custom.git
+[submodule "engine-chromium"]
+	path = engine-chromium
+	url = git@github.com:dmtomczyk/bridge-engine-chromium.git
