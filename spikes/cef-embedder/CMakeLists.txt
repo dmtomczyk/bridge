@@ -16,13 +16,43 @@ if(CEF_EMBEDDER_SPIKE_ENABLE_CEF)
     message(FATAL_ERROR "CEF_EMBEDDER_SPIKE_ENABLE_CEF=ON requires -DCEF_ROOT=/path/to/cef_binary_... or CEF_ROOT in the environment")
   endif()
 
-  message(STATUS "CEF spike bootstrap mode enabled")
-  message(STATUS "CEF_ROOT=${CEF_ROOT}")
-  message(STATUS "Next step: wire FindCEF / sample-project style bootstrap here")
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CEF_ROOT}/cmake")
+  find_package(CEF REQUIRED)
+
+  if(NOT OS_LINUX)
+    message(FATAL_ERROR "The first embedder spike currently targets Linux only")
+  endif()
+
+  # Match the sample-project / cefsimple binary-distribution shape on Linux.
+  add_logical_target("libcef_lib" "${CEF_LIB_DEBUG}" "${CEF_LIB_RELEASE}")
+  set_cef_target_out_dir()
+
+  add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
+
+  add_executable(cef_embedder_spike
+    src/main_linux.cc
+    src/spike_app.cc
+    src/spike_app.h
+    src/spike_handler.cc
+    src/spike_handler.h
+  )
+  set_executable_target_properties(cef_embedder_spike)
+  add_dependencies(cef_embedder_spike libcef_dll_wrapper)
+  target_link_libraries(cef_embedder_spike libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS})
+  set_target_properties(cef_embedder_spike PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+    BUILD_WITH_INSTALL_RPATH TRUE
+    RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR}
+  )
+
+  copy_files("cef_embedder_spike" "${CEF_BINARY_FILES}" "${CEF_BINARY_DIR}" "${CEF_TARGET_OUT_DIR}")
+  copy_files("cef_embedder_spike" "${CEF_RESOURCE_FILES}" "${CEF_RESOURCE_DIR}" "${CEF_TARGET_OUT_DIR}")
+  if(EXISTS "${CEF_BINARY_DIR}/libminigbm.so")
+    copy_files("cef_embedder_spike" "libminigbm.so" "${CEF_BINARY_DIR}" "${CEF_TARGET_OUT_DIR}")
+  endif()
+  set_linux_suid_permissions("cef_embedder_spike" "${CEF_TARGET_OUT_DIR}/chrome-sandbox")
 else()
   message(STATUS "CEF spike scaffold only. Reconfigure with -DCEF_EMBEDDER_SPIKE_ENABLE_CEF=ON once a CEF distribution is available.")
+  add_executable(cef_embedder_spike src/main_stub.cpp)
+  target_compile_features(cef_embedder_spike PRIVATE cxx_std_20)
 endif()
-
-add_executable(cef_embedder_spike src/main.cpp)
-
-target_compile_features(cef_embedder_spike PRIVATE cxx_std_20)
