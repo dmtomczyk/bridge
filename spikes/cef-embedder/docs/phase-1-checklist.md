@@ -18,13 +18,20 @@ Have a clean spike scaffold plus a concrete bootstrap path so Phase 2 can focus 
 
 ## Phase 2 preview
 
-Phase 2 starts when the project can be configured and compiled against a chosen CEF distribution.
+Phase 2 has now started in practice.
 
-The first visible milestone is:
+The first visible milestone has been achieved:
 
-- native window opens
-- Chromium content is visible
-- `https://example.com` loads
+- [x] native window opens
+- [x] Chromium content is visible
+- [x] `https://example.com` loads
+
+Next up:
+
+- [ ] verify title changes cleanly
+- [ ] verify text input
+- [ ] verify a second real site / navigation path
+- [ ] decide when to promote the spike into `engine-cef`
 
 ## Notes to future-us
 

@@ -10,7 +10,16 @@ This spike exists to answer a narrow question:
 
 ## Status
 
-Phase 1 scaffold.
+Phase 1 scaffold is complete, and the first native CEF proof is now real on Linux x64.
+
+Current state:
+- the spike configures/builds against a local CEF binary distribution
+- a native browser window launches
+- `https://example.com` renders
+- manual clicking works
+
+See:
+- `docs/first-native-proof.md`
 
 No production migration is happening here yet.
 
