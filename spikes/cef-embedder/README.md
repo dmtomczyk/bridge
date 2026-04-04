@@ -70,4 +70,6 @@ That backend is for reference/demo/regression comparison only. This spike should
 See:
 
 - `docs/bootstrap-decision.md`
+- `docs/cef-distribution-bootstrap.md`
+- `docs/linux-prereqs.md`
 - `docs/phase-1-checklist.md`

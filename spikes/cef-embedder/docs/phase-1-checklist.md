@@ -9,12 +9,12 @@ Have a clean spike scaffold plus a concrete bootstrap path so Phase 2 can focus 
 - [x] Create isolated spike directory: `spikes/cef-embedder/`
 - [x] Write spike README with goals/non-goals
 - [x] Record bootstrap decision
-- [ ] Decide exact CEF distribution/version acquisition flow
-- [ ] Document expected local prerequisites for Linux x64
-- [ ] Create initial CMake skeleton for the host app
-- [ ] Create initial host app skeleton (`src/main.cpp`)
-- [ ] Record how `CEF_ROOT` will be supplied locally
-- [ ] Write the smallest run target goal: open window + load `https://example.com`
+- [x] Decide exact CEF distribution/version acquisition flow
+- [x] Document expected local prerequisites for Linux x64
+- [x] Create initial CMake skeleton for the host app
+- [x] Create initial host app skeleton (`src/main.cpp`)
+- [x] Record how `CEF_ROOT` will be supplied locally
+- [x] Write the smallest run target goal: open window + load `https://example.com`
 
 ## Phase 2 preview
 
