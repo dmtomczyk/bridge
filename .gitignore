@@ -1,7 +1,4 @@
 _archive/
-client/
-engine-custom/
-engine-chromium/
 .validate-*
 *.swp
 *.swo
