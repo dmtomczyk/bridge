@@ -9,7 +9,8 @@ This document captures the current execution plan for getting from the transitio
 - `bridge/` — workspace/meta repo
 - `client/` — app/client repo
 - `engine-custom/` — custom engine repo
-- `engine-chromium/` — Chromium-backed engine repo
+- `engine-chromium/` — Chromium-backed **reference** engine repo
+- `engine-cef/` — active long-term Chromium backend target repo (currently local bootstrap repo, remote pending)
 
 ## End-state model
 
@@ -27,10 +28,10 @@ flowchart TD
 
 ## Near-term strategic direction
 
-- keep both engines
-- treat Chromium as the current practical focus
+- keep the current tagged `engine-chromium` path runnable as a reference/demo backend, but stop treating it as the active long-term target
+- make `engine-cef` the active long-term Chromium backend target
 - keep the custom engine on the roadmap as a strategic asset and reference backend
-- continue hardening the client/engine contract
+- continue hardening the client/backend contract so both the reference backend and the new CEF backend can coexist during migration
 
 ## Immediate next steps once remotes exist
 

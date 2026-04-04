@@ -1,84 +1,26 @@
-# CEF / Alloy embedder spike
+# Archived CEF embedder spike
 
-## Goal
+This spike has been **promoted into the standalone `engine-cef/` repo**.
 
-Prove a more native Chromium integration path than the current `headless_shell` + DevTools + screenshot reference backend.
+## Current status
 
-This spike exists to answer a narrow question:
+- active CEF backend work now lives in: `engine-cef/`
+- the spike was useful to prove the first native CEF browser window and bootstrap the build/runtime flow
+- the workspace root keeps this archived note only so the history remains easy to follow
 
-> Can we host Chromium in a more normal embedded-browser shape, with a healthier responsiveness/build-feedback story than the current screenshot-driven backend?
+## Promotion note
 
-## Status
+Promoted to local `engine-cef` repo at:
 
-Phase 1 scaffold is complete, and the first native CEF proof is now real on Linux x64.
+- `engine-cef` commit `0bd3d23` — `Bootstrap engine-cef from first native proof`
 
-Current state:
-- the spike configures/builds against a local CEF binary distribution
-- a native browser window launches
-- `https://example.com` renders
-- manual clicking works
+## Why archive it
 
-See:
-- `docs/first-native-proof.md`
+The root repo should stay focused on:
 
-No production migration is happening here yet.
+- workspace/meta coordination
+- ADRs
+- wrapper scripts
+- integration notes
 
-## Chosen bootstrap path
-
-For the first spike, use:
-
-- **CEF binary distribution** on Linux x64
-- **CMake-based host app** inside this directory
-- **windowed rendering first**
-- **Alloy-style runtime preferred** for the browser window
-- **no off-screen rendering in the first spike**
-- **no Chromium source build / patching** as part of first bring-up
-
-### Why this bootstrap path
-
-- avoids the worst feedback loop from rebuilding Chromium internals
-- is much closer to a normal embedded browser architecture
-- keeps the spike focused on proving the integration boundary, not custom frame transport
-- aligns with the project goal of moving toward a real long-term Chromium integration instead of polishing the screenshot backend
-
-## Non-goals
-
-- replacing the current backend yet
-- full browser chrome
-- tabs/history/session persistence parity
-- accessibility completeness
-- production packaging
-- cross-platform support
-- off-screen rendering
-
-## First success criteria
-
-The spike is considered alive once it can:
-
-1. build against a CEF binary distribution
-2. open a native window
-3. load `https://example.com`
-4. show real content
-5. accept basic click/input
-
-## Directory layout
-
-- `docs/` — decisions, setup notes, and checklists
-- `src/` — spike source code
-
-## Current reference backend
-
-The current tagged reference baseline remains:
-
-- `chromium-mvp-reference-2026-04-04`
-
-That backend is for reference/demo/regression comparison only. This spike should not mutate it.
-
-## Immediate next tasks
-
-See:
-
-- `docs/bootstrap-decision.md`
-- `docs/cef-distribution-bootstrap.md`
-- `docs/linux-prereqs.md`
-- `docs/phase-1-checklist.md`
+Keeping a live CEF implementation spike here after `engine-cef/` exists would just add noise.

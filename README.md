@@ -20,7 +20,8 @@ That naming cleanup is still in progress.
 
 - `client/` — the app/client repo; owns the browser shell, chrome, navigation UX, diagnostics, and backend orchestration
 - `engine-custom/` — the custom/native engine repo
-- `engine-chromium/` — the Chromium-backed engine repo
+- `engine-chromium/` — the Chromium-backed **reference** backend repo (headless/DevTools/screenshot bring-up path)
+- `engine-cef/` — the active long-term Chromium backend target repo (local bootstrap repo for now; kept outside root tracking until it gets a proper remote/submodule home)
 
 ## What belongs at the workspace root
 
