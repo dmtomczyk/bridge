@@ -1,0 +1,34 @@
+name: bridge-integration
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pinned-workspace-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout workspace + pinned submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure client integration build
+        run: >-
+          cmake -S client -B client/build/ci-integration
+          -DBRIDGE_ENABLED_ENGINES='custom;chromium;cef'
+          -DBRIDGE_ENABLE_V8=OFF
+
+      - name: Build focused integration targets
+        run: >-
+          cmake --build client/build/ci-integration -j2 --target
+          custom_backend_bridge_test
+          blink_backend_stub_test
+          cef_backend_hybrid_test
+          cef_backend_bridge_preference_test
+
+      - name: Run focused integration tests
+        run: >-
+          ctest --test-dir client/build/ci-integration --output-on-failure
+          -R 'custom_backend_bridge_test|blink_backend_stub_test|cef_backend_hybrid_test|cef_backend_bridge_preference_test'

@@ -23,9 +23,9 @@ Ranked cleanup plan from the cross-repo pause/audit.
 - [x] Make `engine-chromium` reference-only status unmistakable in README/quickstart docs
 
 ### 4. CI/CD skeleton
-- [ ] Add minimal `client` CI
-- [ ] Add minimal `engine-cef` CI
-- [ ] Add root integration CI for pinned submodule states
+- [x] Add minimal `client` CI
+- [x] Add minimal `engine-cef` CI
+- [x] Add root integration CI for pinned submodule states
 
 ## P1 — Important, but after P0
 
