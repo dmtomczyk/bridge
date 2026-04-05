@@ -36,8 +36,8 @@ Ranked cleanup plan from the cross-repo pause/audit.
 
 ### 6. DX consistency
 - [ ] Add more symmetric repo-local build/run docs/helpers across `engine-cef`, `engine-custom`, and `engine-chromium`
-- [ ] Review workspace wrapper scripts for stale target/test defaults
-- [ ] Decide whether root smoke scripts should include a CEF lane
+- [x] Review workspace wrapper scripts for stale target/test defaults
+- [x] Decide whether root smoke scripts should include a CEF lane
 
 ### 7. Publish / integration hygiene
 - [ ] Decide which local commits to push in `client`

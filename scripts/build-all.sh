@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-exec "$ROOT_DIR/client/build.sh" "$@"
+
+if [[ $# -eq 0 ]]; then
+  exec "$ROOT_DIR/compile.sh" --engine all --js both
+fi
+
+exec "$ROOT_DIR/compile.sh" "$@"
