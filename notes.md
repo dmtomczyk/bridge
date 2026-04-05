@@ -161,6 +161,10 @@ Current recommendation:
 - avoid blindly deepening temporary custom draw/runtime borrowing
 - write a short v2 seam note before the next implementation push
 
+That note now exists at:
+
+- `engine-cef/docs/presentation-seam-v2.md`
+
 ### Suggested next design note scope
 
 Keep it short and concrete. It should answer:
