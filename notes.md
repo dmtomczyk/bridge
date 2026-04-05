@@ -115,3 +115,57 @@ The engine contract should remain:
 
 The client is a real application layer, not a placeholder.
 That makes client work some of the highest-leverage work we can do while the Chromium engine path matures.
+
+## 2026-04-04 CEF hybrid checkpoint and next seam
+
+We now have a meaningful `renderer=cef` checkpoint in the split workspace:
+
+- `engine-cef` publishes a real public client contract (`include/engine_cef/...`)
+- `client` constructs `renderer=cef` through that public contract
+- the CEF adapter now owns the shell-facing state/cache boundaries for:
+  - page/load state
+  - navigation/document preparation
+  - install/document ownership
+  - presentation/display-list cache
+  - frame/screenshot cache
+- focused CEF-path tests exist and pass alongside the custom/chromium regression trio
+
+### What is still transitional
+
+The current `renderer=cef` path is still intentionally hybrid.
+The remaining delegated pieces are:
+
+- draw internals
+- runtime behavior
+- input behavior
+
+Those still flow through the custom backend.
+
+### Why this is a natural pause point
+
+Up to this checkpoint, the work was mostly about moving ownership boundaries outward into the adapter without over-claiming a final architecture.
+
+The next step is different: continuing deeper means deciding whether we want to keep borrowing more custom-engine implementation or instead pivot toward a truer `engine-cef` visual/runtime path.
+
+### Recommended path forward
+
+Before writing the next chunk of migration code, define the next seam explicitly.
+
+Recommended immediate design question:
+
+> Should the next slice keep peeling custom draw internals into the adapter, or should it start shaping a real `engine-cef`-owned frame/presentation surface for the client to consume?
+
+Current recommendation:
+
+- keep the current hybrid path as the working migration scaffold
+- avoid blindly deepening temporary custom draw/runtime borrowing
+- write a short v2 seam note before the next implementation push
+
+### Suggested next design note scope
+
+Keep it short and concrete. It should answer:
+
+- what the client should consume from `engine-cef` for presentation
+- whether `engine-cef` should become the source of truth for pixels/frames
+- what remains client-owned (chrome, HUD, diagnostics, composition)
+- whether runtime/input migration should wait until after a clearer visual/frame contract exists
