@@ -112,7 +112,7 @@ Pins:
 
 ### Layer 2 — shared engine API
 Currently:
-- lives in `client/src/renderer_api`
+- lives in `client/src/engine_api`
 
 Near-term:
 - keep it there, but treat it as a public/exportable interface
@@ -212,13 +212,16 @@ flowchart TD
     C[client submodule]
     EC[engine-custom submodule]
     ECH[engine-chromium submodule]
+    ECEF[engine-cef submodule]
 
     W --> C
     W --> EC
     W --> ECH
+    W --> ECEF
 
     EC --> V8[V8 / Lexbor - repo-local, gitignored]
     ECH --> CH[Chromium / Blink / V8 - repo-local, gitignored]
+    ECEF --> CEF[CEF SDK/runtime - external, repo-local config]
 ```
 
 This is the architecture we should optimize toward.

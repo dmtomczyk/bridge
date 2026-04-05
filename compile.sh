@@ -49,12 +49,21 @@ Examples:
   ./compile.sh --engine chromium --js off --tests -R blink_backend_stub_test
   ./compile.sh --engine all --js both
 
+  # Real CEF builds currently use the dedicated client CMake flags directly:
+  cmake -S ./client -B ./client/build/cef-hybrid-real \
+    -DBRIDGE_ENABLED_ENGINES='custom;chromium;cef' \
+    -DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON \
+    -DBRIDGE_CEF_ROOT=/path/to/cef_binary_...
+
 Options:
   --engine <custom|chromium|all>
-      Select the backend focus for this build.
+      Select the backend focus for this wrapper build.
       custom   -> build custom-engine targets/tests only
-      chromium -> build Chromium seam targets/tests only
+      chromium -> build Chromium reference seam targets/tests only
       all      -> build the full client graph (default)
+
+      Note: real CEF-enabled builds are not owned by this wrapper yet; use the
+      dedicated client CMake flags shown in the examples section.
 
   --js <off|v8|both>
       Select JS/V8 mode.
@@ -95,6 +104,9 @@ Notes:
   - This is a workspace-level wrapper around the client CMake graph.
   - It improves selection of targets/tests, but the current CMake graph still
     configures both engine repos because client links both backends today.
+  - `engine-cef` is the active long-term Chromium backend target, but real
+    CEF-enabled builds still go through the dedicated client CMake flags rather
+    than this wrapper.
 EOF
 }
 
