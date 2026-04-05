@@ -31,8 +31,8 @@ Ranked cleanup plan from the cross-repo pause/audit.
 
 ### 5. Client doc drift cleanup
 - [ ] Rewrite `client/docs/architecture.md` to current split/CEF truth
-- [ ] Decide whether `client/docs/architecture-roadmap.md` should be rewritten, bannered, or partially archived
-- [ ] Banner or archive `client/refactor.md` as historical/Blink-era planning if it is no longer a current source of truth
+- [x] Decide whether `client/docs/architecture-roadmap.md` should be rewritten, bannered, or partially archived
+- [x] Banner or archive `client/refactor.md` as historical/Blink-era planning if it is no longer a current source of truth
 
 ### 6. DX consistency
 - [ ] Add more symmetric repo-local build/run docs/helpers across `engine-cef`, `engine-custom`, and `engine-chromium`
