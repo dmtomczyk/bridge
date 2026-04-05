@@ -8,7 +8,7 @@ Ranked cleanup plan from the cross-repo pause/audit.
 
 ### 1. Repo hygiene: ignore generated/runtime noise
 - [x] Ignore `engine-cef/build-cef/`
-- [ ] Check for other obviously missing build/output ignores in active repos
+- [x] Check for other obviously missing build/output ignores in active repos
 
 ### 2. Build / launcher truthfulness
 - [x] Update client launcher help/docs to mention `--renderer=cef`
@@ -43,6 +43,7 @@ Ranked cleanup plan from the cross-repo pause/audit.
 - [ ] Decide which local commits to push in `client`
 - [ ] Decide which local commits to push in `engine-cef`
 - [ ] Decide when to publish the root submodule pointer updates
+- [x] Write a grouped publish plan for the current local commit stacks (`publish-plan-2026-04-05.md`)
 
 ## P2 — Nice to have / later
 
