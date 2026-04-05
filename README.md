@@ -102,6 +102,13 @@ Run the Chromium interaction/key/page-reaction smokes under Xvfb:
 ./scripts/chromium-text-smoke.sh
 ```
 
+Run the real-CEF runtime-host smoke lane (requires `CEF_ROOT` / `BRIDGE_CEF_ROOT`):
+
+```bash
+CEF_ROOT=/path/to/cef_binary_... ./scripts/cef-runtime-smoke.sh
+CEF_ROOT=/path/to/cef_binary_... ./scripts/cef-runtime-smoke.sh 'data:text/html,<html><body>hi</body></html>'
+```
+
 Smoke-script notes:
 - Run these scripts serially, not in parallel. They discover the newest `client/artifacts/sessions/...` directory and will interfere with each other if launched at the same time.
 - To target the `v8-on` browser instead of the default `v8-off` browser, set `BRIDGE_BUILD_DIR`:

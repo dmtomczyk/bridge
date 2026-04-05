@@ -14,8 +14,8 @@ Ranked cleanup plan from the cross-repo pause/audit.
 - [x] Update client launcher help/docs to mention `--renderer=cef`
 - [x] Update client launcher help/docs to mention `--cef-runtime-probe`
 - [x] Update workspace build wrapper docs/help to explain current CEF limitations/reality
-- [ ] Decide whether root `compile.sh` should grow a real `--engine cef` mode or remain explicit about not owning that flow yet
-- [ ] Add a small CEF-oriented smoke wrapper or documented command path at the workspace root
+- [x] Decide whether root `compile.sh` should grow a real `--engine cef` mode or remain explicit about not owning that flow yet
+- [x] Add a small CEF-oriented smoke wrapper or documented command path at the workspace root
 
 ### 3. Current architecture truth pass
 - [x] Clean obvious stale bits in `GIT.md` (engine API path / summary diagram / `engine-cef` visibility)
@@ -30,7 +30,7 @@ Ranked cleanup plan from the cross-repo pause/audit.
 ## P1 — Important, but after P0
 
 ### 5. Client doc drift cleanup
-- [ ] Rewrite `client/docs/architecture.md` to current split/CEF truth
+- [x] Rewrite `client/docs/architecture.md` to current split/CEF truth
 - [x] Decide whether `client/docs/architecture-roadmap.md` should be rewritten, bannered, or partially archived
 - [x] Banner or archive `client/refactor.md` as historical/Blink-era planning if it is no longer a current source of truth
 
@@ -52,7 +52,7 @@ Ranked cleanup plan from the cross-repo pause/audit.
 - [ ] Mark older Blink/modular-monolith diagrams as historical where needed
 
 ### 9. Engine-custom curation
-- [ ] Consider adding a small `BUILD.md` or equivalent quickstart to `engine-custom`
+- [x] Consider adding a small `BUILD.md` or equivalent quickstart to `engine-custom`
 - [ ] Review thin/legacy monorepo-reference docs there for cleanup or historical labeling
 
 ## Notes
