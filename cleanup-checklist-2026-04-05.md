@@ -19,8 +19,8 @@ Ranked cleanup plan from the cross-repo pause/audit.
 
 ### 3. Current architecture truth pass
 - [x] Clean obvious stale bits in `GIT.md` (engine API path / summary diagram / `engine-cef` visibility)
-- [ ] Review root `refactor.md` for stale engine-chromium-centric language now that `engine-cef` is the active long-term Chromium lane
-- [ ] Make `engine-chromium` reference-only status unmistakable in README/quickstart docs
+- [x] Review root `refactor.md` for stale engine-chromium-centric language now that `engine-cef` is the active long-term Chromium lane
+- [x] Make `engine-chromium` reference-only status unmistakable in README/quickstart docs
 
 ### 4. CI/CD skeleton
 - [ ] Add minimal `client` CI
