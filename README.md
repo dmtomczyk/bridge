@@ -23,6 +23,12 @@ That naming cleanup is still in progress.
 - `engine-chromium/` — the Chromium-backed **reference** backend repo (headless/DevTools/screenshot bring-up path)
 - `engine-cef/` — the active long-term Chromium backend target repo
 
+> Submodules are pinned in this repo. After cloning, initialize them before build/test work:
+>
+> ```bash
+> git submodule update --init --recursive
+> ```
+
 ## What belongs at the workspace root
 
 Only cross-repo coordination items should live here:
@@ -55,6 +61,20 @@ So treat the workspace shape as established, while treating some internal repo b
 - `notes.md` — shell scope, renderer interface, and roadmap notes
 
 ## Common commands
+
+### Quick start
+
+```bash
+git submodule update --init --recursive
+./scripts/status.sh
+./compile.sh --engine custom --js off
+./startbrowser.sh
+```
+
+Prerequisites:
+- CMake + C++ toolchain
+- populated submodules (`client`, `engine-custom`, `engine-chromium`, `engine-cef`)
+- `xvfb-run` for smoke scripts that drive browser flows in headless CI/dev setups
 
 Build from the workspace root with engine/JS selection:
 
@@ -117,3 +137,14 @@ Smoke-script notes:
 BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-e2e-smoke.sh https://example.com
 BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-input-smoke.sh
 ```
+
+## Troubleshooting
+
+- `CMake Error: .../client does not appear to contain CMakeLists.txt`
+  - Run `git submodule update --init --recursive` and verify `client/` is populated.
+- `ctest ... build dir ... does not exist`
+  - Build first with `./compile.sh ...` and point smoke/test helpers to the expected build directory.
+- V8 mode (`--js v8`) fails due to missing includes/libs
+  - Set `--v8-include` and `--v8-lib`, or provide `BRIDGE_V8_INCLUDE_DIR` / `BRIDGE_V8_LIBRARY_DIR`.
+- Real CEF smoke lane fails to locate CEF
+  - Export `CEF_ROOT` (or `BRIDGE_CEF_ROOT`) before running `./scripts/cef-runtime-smoke.sh`.
