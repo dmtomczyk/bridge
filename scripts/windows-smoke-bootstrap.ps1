@@ -49,15 +49,24 @@ try {
     }
 
     Write-Step "Configuring Windows runtime-host build"
-    cmake -S $BrowserDir -B $BuildPath -G Ninja `
-        -DBRIDGE_ENABLED_ENGINES=custom;cef `
-        -DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON `
-        -DBRIDGE_CEF_ROOT=$CefRoot `
-        -DENGINE_CEF_RUNTIME_TARGET_PLATFORM=windows
+    $configureArgs = @(
+        '-S', $BrowserDir,
+        '-B', $BuildPath,
+        '-G', 'Ninja',
+        '-DBRIDGE_ENABLED_ENGINES:STRING=custom;cef',
+        '-DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON',
+        "-DBRIDGE_CEF_ROOT=$CefRoot",
+        '-DENGINE_CEF_RUNTIME_TARGET_PLATFORM=windows'
+    )
+    & cmake @configureArgs
 
     if (-not $SkipBuild) {
         Write-Step "Building key Windows smoke targets"
-        cmake --build $BuildPath --target engine_cef_runtime_host browser_cef_runtime_probe browser_cef_runtime_browser browser
+        $buildArgs = @(
+            '--build', $BuildPath,
+            '--target', 'browser_cef_runtime_probe', 'browser_cef_runtime_browser', 'browser'
+        )
+        & cmake @buildArgs
     }
 
     Write-Step "Build complete"
