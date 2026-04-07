@@ -50,9 +50,7 @@ try {
 
     Write-Step "Configuring Windows runtime-host build"
     cmake -S $BrowserDir -B $BuildPath -G Ninja `
-        -DBRIDGE_ENABLE_CEF_ENGINE=ON `
-        -DBRIDGE_ENABLE_CUSTOM_ENGINE=ON `
-        -DBRIDGE_ENABLE_CHROMIUM_ENGINE=OFF `
+        -DBRIDGE_ENABLED_ENGINES=custom;cef `
         -DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON `
         -DBRIDGE_CEF_ROOT=$CefRoot `
         -DENGINE_CEF_RUNTIME_TARGET_PLATFORM=windows
