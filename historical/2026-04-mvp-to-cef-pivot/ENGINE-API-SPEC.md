@@ -34,7 +34,7 @@ The goal is to make the current migration intentional and honest.
 - another engine's build graph
 
 ### Contract rule
-Only client-owned types under `engine_api/` should cross the shell/engine boundary.
+Only browser-owned types under `engine_api/` should cross the shell/engine boundary.
 
 ---
 
@@ -171,7 +171,7 @@ It is acceptable during migration but reflects unfinished ownership boundaries.
 
 ### Why core
 This is the correct direction for engine-neutral document export:
-- client-owned snapshot type
+- browser-owned snapshot type
 - no engine-internal DOM types in the shared contract
 
 ### Notes
@@ -282,7 +282,7 @@ It is useful now, but the long-term ownership may move.
 **Classification:** Core
 
 ### Why core
-This now uses a client-owned contract type and is a legitimate engine export seam.
+This now uses a browser-owned contract type and is a legitimate engine export seam.
 
 ### Notes
 Even if the exact display-list shape evolves, the concept is valid.
@@ -405,7 +405,7 @@ Early but directionally correct.
 
 ### Notes
 The exact fields may evolve, but this is the right ownership model:
-- client-owned snapshot type
+- browser-owned snapshot type
 - no custom-engine DOM headers in the contract
 
 ---

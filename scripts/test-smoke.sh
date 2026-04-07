@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-CLASSIC_BUILD_DIR="${BRIDGE_BUILD_DIR:-$ROOT_DIR/client/build/v8-off}"
+CLASSIC_BUILD_DIR="${BRIDGE_BUILD_DIR:-$ROOT_DIR/browser/build/v8-off}"
 LANE="classic"
 URL="data:text/html,<html><body>cef smoke</body></html>"
 
@@ -16,12 +16,12 @@ Options:
   -h, --help             show help
 
 Lanes:
-  classic  -> runs focused scaffold smoke tests from the client build dir
+  classic  -> runs focused scaffold smoke tests from the browser build dir
   cef      -> runs the real-CEF smoke helper via ./scripts/cef-runtime-smoke.sh
 
 Examples:
   ./scripts/test-smoke.sh
-  ./scripts/test-smoke.sh --lane classic --build-dir ./client/build/custom-v8-off
+  ./scripts/test-smoke.sh --lane classic --build-dir ./browser/build/custom-v8-off
   CEF_ROOT=/path/to/cef_binary_... ./scripts/test-smoke.sh --lane cef
 EOF
 }

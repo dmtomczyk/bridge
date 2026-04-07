@@ -337,7 +337,7 @@ We should consider the near-term plan successful when all of the following are t
 
 If starting now, do these in order:
 
-1. Commit and push the current `bridge/client/engine-custom` build/test stabilization work.
+1. Commit and push the current `bridge/browser/engine-custom` build/test stabilization work.
 2. Add `.gitmodules` and convert `client`, `engine-custom`, and `engine-chromium` into formal submodules under `bridge/`.
 3. Validate the fresh workspace bootstrap path.
 4. Freeze the known-good Chromium build metadata (`revision`, `args.gn`, config docs, backup notes).

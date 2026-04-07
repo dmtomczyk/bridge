@@ -1,6 +1,9 @@
-[submodule "client"]
-	path = client
+[submodule "browser"]
+	path = browser
 	url = git@github.com:dmtomczyk/bridge-client.git
+[submodule "core"]
+	path = core
+	url = git@github.com:dmtomczyk/bridge-core.git
 [submodule "engine-custom"]
 	path = engine-custom
 	url = git@github.com:dmtomczyk/bridge-engine-custom.git

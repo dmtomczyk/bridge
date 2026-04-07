@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-CLIENT_DIR="$ROOT_DIR/client"
+BROWSER_DIR="$ROOT_DIR/browser"
 ENGINE_CUSTOM_DIR="$ROOT_DIR/engine-custom"
 ENGINE_CHROMIUM_DIR="$ROOT_DIR/engine-chromium"
 
@@ -13,7 +13,7 @@ CONFIGURE_ONLY=0
 TARGETS=()
 TEST_REGEX=""
 JOBS="${JOBS:-$(nproc 2>/dev/null || echo 4)}"
-BUILD_ROOT="${BRIDGE_BUILD_ROOT:-$CLIENT_DIR/build}"
+BUILD_ROOT="${BRIDGE_BUILD_ROOT:-$BROWSER_DIR/build}"
 CMAKE_GENERATOR="${CMAKE_GENERATOR:-}"
 
 if [[ -z "${BRIDGE_V8_INCLUDE_DIR:-}" && -d "$ENGINE_CUSTOM_DIR/third_party/v8/include" ]]; then
@@ -49,8 +49,8 @@ Examples:
   ./compile.sh --engine chromium --js off --tests -R blink_backend_stub_test
   ./compile.sh --engine all --js both
 
-  # Real CEF builds currently use the dedicated client CMake flags directly:
-  cmake -S ./client -B ./client/build/cef-hybrid-real \
+  # Real CEF builds currently use the dedicated browser CMake flags directly:
+  cmake -S ./browser -B ./browser/build/cef-hybrid-real \
     -DBRIDGE_ENABLED_ENGINES='custom;chromium;cef' \
     -DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON \
     -DBRIDGE_CEF_ROOT=/path/to/cef_binary_...
@@ -63,7 +63,7 @@ Options:
       all      -> build the full client graph (default)
 
       Note: real CEF-enabled builds are not owned by this wrapper yet; use the
-      dedicated client CMake flags shown in the examples section.
+      dedicated browser CMake flags shown in the examples section.
 
   --js <off|v8|both>
       Select JS/V8 mode.
@@ -95,15 +95,15 @@ Options:
       Show this help.
 
 Build directories:
-  client/build/<engine>-v8-off
-  client/build/<engine>-v8-on
-  client/build/all-v8-off
-  client/build/all-v8-on
+  browser/build/<engine>-v8-off
+  browser/build/<engine>-v8-on
+  browser/build/all-v8-off
+  browser/build/all-v8-on
 
 Notes:
-  - This is a workspace-level wrapper around the client CMake graph.
+  - This is a workspace-level wrapper around the browser CMake graph.
   - It improves selection of targets/tests, but the current CMake graph still
-    configures both engine repos because client links both backends today.
+    configures both engine repos because the browser repo links both backends today.
   - `engine-cef` is the active long-term Chromium backend target, but real
     CEF-enabled builds still go through the dedicated client CMake flags rather
     than this wrapper.

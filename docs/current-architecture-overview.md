@@ -14,9 +14,9 @@ It is meant to answer four questions quickly:
 For more detailed seam documents, also see:
 - `../GIT.md`
 - `../WORKSPACE.md`
-- `../client/docs/architecture.md`
-- `../client/docs/cef-runtime-lanes.md`
-- `../client/docs/cef-attach-seam.md`
+- `../browser/docs/architecture.md`
+- `../browser/docs/cef-runtime-lanes.md`
+- `../browser/docs/cef-attach-seam.md`
 - `../engine-cef/docs/runtime-integration-boundary-v1.md`
 - `../engine-cef/docs/client-integration-bridge.md`
 - `../engine-cef/docs/presentation-seam-v2.md`
@@ -99,7 +99,7 @@ flowchart LR
 
     subgraph STAGE["Staging lane: runtime-host bring-up path"]
         S1["browser --cef-runtime-probe"]
-        S2["client_cef_runtime_probe"]
+        S2["browser_cef_runtime_probe"]
         S3["attach_cef_runtime_host(...)"]
         S4["CefRuntimeHost validation / first-frame checks"]
     end
@@ -129,7 +129,7 @@ This is a deliberate runtime-host bring-up/diagnostic lane.
 
 Examples:
 - `attach_cef_runtime_host(...)`
-- `client_cef_runtime_probe`
+- `browser_cef_runtime_probe`
 - `browser --cef-runtime-probe`
 - `engine_cef_runtime_host_probe`
 
@@ -215,7 +215,7 @@ flowchart TD
 
     subgraph CLIENT_STAGE["Client staging lane"]
         LAUNCH["browser launcher"]
-        DISPATCH["exec into client_cef_runtime_probe"]
+        DISPATCH["exec into browser_cef_runtime_probe"]
         ATTACH["attach_cef_runtime_host(...)"]
         HOST["CefRuntimeHost"]
     end
@@ -358,7 +358,7 @@ flowchart LR
 
     subgraph STAGE["Staging lane"]
         S1["browser --cef-runtime-probe"]
-        S2["client_cef_runtime_probe"]
+        S2["browser_cef_runtime_probe"]
         S3["CefRuntimeHost"]
         S4["engine-cef runtime host / first-frame validation"]
     end
@@ -390,7 +390,7 @@ flowchart LR
 ### Current staging tools
 
 - `attach_cef_runtime_host(...)`
-- `client_cef_runtime_probe`
+- `browser_cef_runtime_probe`
 - `browser --cef-runtime-probe`
 - `engine_cef_runtime_host_probe`
 
@@ -426,11 +426,11 @@ flowchart TD
 
     subgraph CLIENT["bridge-client (official runtime entry)"]
         MAIN["main.cpp launcher"]
-        ROUTE["renderer=cef-runtime-host\nre-exec into client_cef_runtime_browser"]
+        ROUTE["renderer=cef-runtime-host\nre-exec into browser_cef_runtime_browser"]
         SESSION["session logger / stdout+stderr / perf logs"]
     end
 
-    subgraph RUNTIME_BROWSER["client_cef_runtime_browser"]
+    subgraph RUNTIME_BROWSER["browser_cef_runtime_browser"]
         BROWSER_MAIN["cef_runtime_browser_main.cpp"]
         ATTACH["attach_cef_runtime_host(config)"]
         HOST["CefRuntimeHost"]
@@ -470,7 +470,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph APP["BRIDGE application layer"]
-        ENTRY["client_cef_runtime_browser"]
+        ENTRY["browser_cef_runtime_browser"]
         HOST["CefRuntimeHost"]
         HANDLER["CefBrowserHandler"]
         OSR["CefOsrHostGtk"]
@@ -512,7 +512,7 @@ flowchart LR
 
 ### Reading these diagrams
 
-The key point is that the official/main browser path today is **not** the old client-owned shell/chrome loop.
+The key point is that the official/main browser path today is **not** the old browser-owned shell/chrome loop.
 
 Instead, it is:
 

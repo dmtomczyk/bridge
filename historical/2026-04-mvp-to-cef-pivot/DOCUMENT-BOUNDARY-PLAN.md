@@ -6,7 +6,7 @@ The workspace is now meaningfully improved at the build-graph level:
 
 - `engine-custom` and `engine-chromium` can build separately
 - Chromium no longer imports or links custom-engine code
-- the client-owned renderer API now owns the display-list contract
+- the browser-owned renderer API now owns the display-list contract
 
 However, the backend contract is still **not cleanly engine-neutral** because it still exposes custom-DOM-shaped APIs:
 
@@ -52,7 +52,7 @@ The next document-boundary refactor should satisfy these goals:
 - neither engine should depend on the other engine's internal document or layout types
 
 ### B. Client-owned contract
-The only shared types across shell/backends should live under client-owned renderer API headers.
+The only shared types across shell/backends should live under browser-owned renderer API headers.
 
 ### C. Explicit mutation protocol
 Do not round-trip a large mutable DOM tree through the backend interface unless there is a very strong reason.
@@ -68,7 +68,7 @@ The shell can continue to own a transitional local DOM/layout pipeline while the
 
 Replace the current backend document round-trip with:
 
-1. **client-owned document snapshot types** for read/export
+1. **browser-owned document snapshot types** for read/export
 2. **explicit backend mutation/edit APIs** for write/update
 3. **shell-local working DOM** as an internal implementation detail, not a backend contract type
 
@@ -84,7 +84,7 @@ Backends should expose **snapshots and explicit operations**, not a shared mutab
 
 ### 1. Read-only export types in `client/src/engine_api/`
 
-Introduce client-owned document snapshot types, for example:
+Introduce browser-owned document snapshot types, for example:
 
 - `RendererNodeSnapshot`
 - `RendererDocumentSnapshot`
@@ -192,7 +192,7 @@ That distinction is critical.
 Do this in phases.
 
 ### Phase 1 — snapshot type introduction
-Create client-owned document snapshot types under `engine_api/`.
+Create browser-owned document snapshot types under `engine_api/`.
 
 No behavior change yet.
 
@@ -260,7 +260,7 @@ The document-boundary refactor is successful when all of the following are true:
 
 1. `IRendererBackend` no longer includes or exposes `dom::Document`
 2. `IRendererBackend` no longer includes or exposes engine-custom internal layout/document types
-3. `engine-custom` and `engine-chromium` both build against client-owned renderer API types only
+3. `engine-custom` and `engine-chromium` both build against browser-owned renderer API types only
 4. backend edits are represented by explicit methods, not a shared mutable DOM tree contract
 5. the shell may still use internal transitional DOM/layout code, but that does not leak into the backend interface
 

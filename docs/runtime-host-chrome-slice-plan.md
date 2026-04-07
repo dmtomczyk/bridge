@@ -59,7 +59,6 @@ This slice is intentionally narrow.
 - small BRIDGE identity mark in the strip
 
 ### Explicitly out of scope
-- tabs
 - bookmarks
 - settings UI
 - download manager
@@ -67,6 +66,14 @@ This slice is intentionally narrow.
 - full window management system
 - generalized launcher/workbench features
 - deep theming
+
+### Status note
+This document started before tabs were reintroduced. As of 2026-04-06, the runtime-host path now has:
+- a minimal visible tab strip
+- click-to-switch / close / new-tab behavior
+- initial popup/new-window → new-tab policy hardening
+
+So this document should now be read as the chrome baseline that tabs were built on top of, not as proof that tabs are still out of scope.
 
 This is **not** the final browser UX. It is the first usable chrome slice.
 

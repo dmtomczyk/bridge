@@ -130,12 +130,12 @@ CEF_ROOT=/path/to/cef_binary_... ./scripts/cef-runtime-smoke.sh 'data:text/html,
 ```
 
 Smoke-script notes:
-- Run these scripts serially, not in parallel. They discover the newest `client/artifacts/sessions/...` directory and will interfere with each other if launched at the same time.
+- Run these scripts serially, not in parallel. They discover the newest `browser/artifacts/sessions/...` directory and will interfere with each other if launched at the same time.
 - To target the `v8-on` browser instead of the default `v8-off` browser, set `BRIDGE_BUILD_DIR`:
 
 ```bash
-BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-e2e-smoke.sh https://example.com
-BRIDGE_BUILD_DIR=./client/build/v8-on ./scripts/chromium-input-smoke.sh
+BRIDGE_BUILD_DIR=./browser/build/v8-on ./scripts/chromium-e2e-smoke.sh https://example.com
+BRIDGE_BUILD_DIR=./browser/build/v8-on ./scripts/chromium-input-smoke.sh
 ```
 
 ## Troubleshooting
