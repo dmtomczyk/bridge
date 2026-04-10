@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [[ $# -eq 0 ]]; then
-  exec "$ROOT_DIR/compile.sh" --engine all --js both
+  exec "$ROOT_DIR/compile.sh" --bootstrap --engine all --js both
 fi
 
 exec "$ROOT_DIR/compile.sh" "$@"

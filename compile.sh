@@ -5,11 +5,14 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 BROWSER_DIR="$ROOT_DIR/browser"
 ENGINE_CUSTOM_DIR="$ROOT_DIR/engine-custom"
 ENGINE_CHROMIUM_DIR="$ROOT_DIR/engine-chromium"
+ENGINE_CEF_DIR="$ROOT_DIR/engine-cef"
+CORE_DIR="$ROOT_DIR/core"
 
 ENGINE="all"
 JS_MODE="both"
 RUN_TESTS=1
 CONFIGURE_ONLY=0
+BOOTSTRAP=0
 TARGETS=()
 TEST_REGEX=""
 JOBS="${JOBS:-$(nproc 2>/dev/null || echo 4)}"
@@ -43,13 +46,14 @@ usage() {
 Usage: ./compile.sh [options]
 
 Examples:
+  ./compile.sh --bootstrap --engine chromium --js off
   ./compile.sh --engine chromium --js off
   ./compile.sh --engine custom --js v8
   ./compile.sh --engine custom --js off --target browser --target custom_backend_bridge_test
   ./compile.sh --engine chromium --js off --tests -R blink_backend_stub_test
   ./compile.sh --engine all --js both
 
-  # Real CEF builds currently use the dedicated browser CMake flags directly:
+  # Real CEF builds still use dedicated browser flags directly:
   cmake -S ./browser -B ./browser/build/cef-hybrid-real \
     -DBRIDGE_ENABLED_ENGINES='custom;chromium;cef' \
     -DBRIDGE_ENGINE_CEF_ENABLE_CEF=ON \
@@ -70,6 +74,9 @@ Options:
       off  -> BRIDGE_ENABLE_V8=OFF
       v8   -> BRIDGE_ENABLE_V8=ON
       both -> build both variants in separate build dirs (default)
+
+  --bootstrap
+      Run git submodule initialization/checks before configure.
 
   --target <name>
       Build only the specified CMake target(s). Repeatable.
@@ -105,7 +112,7 @@ Notes:
   - It improves selection of targets/tests, but the current CMake graph still
     configures both engine repos because the browser repo links both backends today.
   - `engine-cef` is the active long-term Chromium backend target, but real
-    CEF-enabled builds still go through the dedicated client CMake flags rather
+    CEF-enabled builds still go through the dedicated browser CMake flags rather
     than this wrapper.
 EOF
 }
@@ -132,6 +139,22 @@ validate_engine() {
   esac
 }
 
+require_dir_with_file() {
+  local dir="$1"
+  local file="$2"
+  local label="$3"
+  if [[ ! -e "$dir/$file" ]]; then
+    echo "Missing $label at $dir/$file" >&2
+    echo "Run ./bootstrap.sh first (or git submodule update --init --recursive)." >&2
+    exit 1
+  fi
+}
+
+bootstrap_workspace() {
+  echo "==> Bootstrapping workspace"
+  git -C "$ROOT_DIR" submodule update --init --recursive
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --engine)
@@ -145,6 +168,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     off|on|both)
       JS_MODE="$(normalize_js_mode "$1")"
+      shift
+      ;;
+    --bootstrap)
+      BOOTSTRAP=1
       shift
       ;;
     --target)
@@ -190,6 +217,16 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ "$BOOTSTRAP" -eq 1 ]]; then
+  bootstrap_workspace
+fi
+
+require_dir_with_file "$BROWSER_DIR" "CMakeLists.txt" "browser repo"
+require_dir_with_file "$CORE_DIR" "CMakeLists.txt" "core repo"
+require_dir_with_file "$ENGINE_CUSTOM_DIR" "CMakeLists.txt" "engine-custom repo"
+require_dir_with_file "$ENGINE_CHROMIUM_DIR" "CMakeLists.txt" "engine-chromium repo"
+require_dir_with_file "$ENGINE_CEF_DIR" "CMakeLists.txt" "engine-cef repo"
 
 build_targets_for_engine() {
   local engine="$1"
@@ -262,19 +299,21 @@ configure_variant() {
 
   mkdir -p "$BUILD_ROOT"
 
-  # Transitional reality: the client graph still needs both engine repos present at
+  # Transitional reality: the browser graph still needs both engine repos present at
   # configure/build time even when the caller only wants to focus builds/tests on
   # one engine. The engine selector below narrows targets/tests, not the configured
   # repo set.
   local enabled_engines="custom;chromium"
 
   local cmake_args=(
-    -S "$CLIENT_DIR"
+    -S "$BROWSER_DIR"
     -B "$build_dir"
     -DBRIDGE_ENABLE_V8="$v8_enabled"
     -DBRIDGE_ENABLED_ENGINES="$enabled_engines"
+    -DBRIDGE_CORE_DIR="$CORE_DIR"
     -DBRIDGE_ENGINE_CUSTOM_DIR="$ENGINE_CUSTOM_DIR"
     -DBRIDGE_ENGINE_CHROMIUM_DIR="$ENGINE_CHROMIUM_DIR"
+    -DBRIDGE_ENGINE_CEF_DIR="$ENGINE_CEF_DIR"
   )
 
   if [[ -n "$CMAKE_GENERATOR" ]]; then
