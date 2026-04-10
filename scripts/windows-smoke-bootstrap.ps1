@@ -1,6 +1,5 @@
 param(
     [string]$RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path,
-    [Parameter(Mandatory = $true)]
     [string]$CefRoot,
     [string]$BuildDir = "browser\build\cef-hybrid-real-browser-win",
     [switch]$SkipSubmodules,
@@ -57,9 +56,27 @@ $EngineChromiumDir = Join-Path $RepoRoot "engine-chromium"
 $EngineCefDir = Join-Path $RepoRoot "engine-cef"
 $BuildPath = Join-Path $RepoRoot $BuildDir
 
+$cefRootSource = $null
+if ($CefRoot) {
+    $cefRootSource = 'argument'
+}
+elseif ($env:BRIDGE_CEF_ROOT) {
+    $CefRoot = $env:BRIDGE_CEF_ROOT
+    $cefRootSource = 'BRIDGE_CEF_ROOT'
+}
+elseif ($env:CEF_ROOT) {
+    $CefRoot = $env:CEF_ROOT
+    $cefRootSource = 'CEF_ROOT'
+}
+
 Write-Step "Windows smoke preflight"
 Write-Info "Repository root: $RepoRoot"
-Write-Info "CEF root: $CefRoot"
+if ($CefRoot) {
+    Write-Info "CEF root ($cefRootSource): $CefRoot"
+}
+else {
+    Write-Info "CEF root: <not set>"
+}
 Write-Info "Build dir: $BuildPath"
 
 if (-not (Test-CommandAvailable 'git')) {
@@ -98,11 +115,16 @@ foreach ($entry in @(
     }
 }
 
-try {
-    $CefRoot = (Resolve-Path $CefRoot).Path
+if (-not $CefRoot) {
+    Add-Issue $issues 'CEF root' 'No CEF root was provided.' 'Pass -CefRoot to an extracted `cef_binary_...` directory, or set BRIDGE_CEF_ROOT / CEF_ROOT in the environment before running the script.'
 }
-catch {
-    Add-Issue $issues 'CEF root' "CEF root path does not exist: $CefRoot" 'Pass -CefRoot to an extracted `cef_binary_...` directory.'
+else {
+    try {
+        $CefRoot = (Resolve-Path $CefRoot).Path
+    }
+    catch {
+        Add-Issue $issues 'CEF root' "CEF root path does not exist: $CefRoot" 'Pass -CefRoot to an extracted `cef_binary_...` directory, or set BRIDGE_CEF_ROOT / CEF_ROOT to a valid path.'
+    }
 }
 
 if ($CefRoot -and (Test-Path $CefRoot)) {

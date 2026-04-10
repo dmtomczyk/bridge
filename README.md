@@ -80,6 +80,11 @@ Windows PowerShell:
 .\build.ps1 -Engine chromium -Js off
 
 # CEF Windows preflight / smoke helper
+$env:CEF_ROOT = 'C:\path\to\cef_binary_...'
+.\scripts\windows-smoke-bootstrap.ps1 -PreflightOnly
+.\scripts\windows-smoke-bootstrap.ps1
+
+# or pass it explicitly
 .\scripts\windows-smoke-bootstrap.ps1 -CefRoot C:\path\to\cef_binary_... -PreflightOnly
 .\scripts\windows-smoke-bootstrap.ps1 -CefRoot C:\path\to\cef_binary_...
 ```
@@ -172,4 +177,4 @@ BRIDGE_BUILD_DIR=./browser/build/v8-on ./scripts/chromium-input-smoke.sh
 - Real CEF smoke lane fails to locate CEF
   - Export `CEF_ROOT` (or `BRIDGE_CEF_ROOT`) before running `./scripts/cef-runtime-smoke.sh`.
 - Windows helper reports missing `cl` / `link` / `ninja` / CEF files
-  - Run `./scripts/windows-smoke-bootstrap.ps1 -CefRoot C:\path\to\cef_binary_... -PreflightOnly` in PowerShell to get a dependency report with fix hints before building.
+  - Run `./scripts/windows-smoke-bootstrap.ps1 -PreflightOnly` in PowerShell if `CEF_ROOT` or `BRIDGE_CEF_ROOT` is already set, or pass `-CefRoot C:\path\to\cef_binary_...` explicitly to get a dependency report with fix hints before building.
