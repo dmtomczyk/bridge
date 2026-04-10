@@ -18,10 +18,10 @@ function Require-Command([string]$Name) {
 Require-Command git
 
 function Test-RepoPopulated([string]$RepoPath) {
-    if (-not (Test-Path $RepoPath -PathType Container)) {
+    if (-not (Test-Path -Path $RepoPath -PathType Container)) {
         return $false
     }
-    return $null -ne (Get-ChildItem -Force -ErrorAction SilentlyContinue $RepoPath | Select-Object -First 1)
+    return $null -ne (Get-ChildItem -Path $RepoPath -Force -ErrorAction SilentlyContinue | Select-Object -First 1)
 }
 
 $RepoRoot = (Resolve-Path $RepoRoot).Path
