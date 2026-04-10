@@ -46,6 +46,13 @@ function Test-FileAny([string[]]$Paths) {
     return $false
 }
 
+function Test-RepoPopulated([string]$RepoPath) {
+    if (-not (Test-Path $RepoPath -PathType Container)) {
+        return $false
+    }
+    return $null -ne (Get-ChildItem -Force -ErrorAction SilentlyContinue $RepoPath | Select-Object -First 1)
+}
+
 $issues = New-Object System.Collections.Generic.List[object]
 
 $RepoRoot = (Resolve-Path $RepoRoot).Path
@@ -104,13 +111,18 @@ if (-not (Test-Path $RepoRoot)) {
 }
 
 foreach ($entry in @(
-    @{ Name = 'browser repo'; Path = (Join-Path $BrowserDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
-    @{ Name = 'core repo'; Path = (Join-Path $CoreDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
-    @{ Name = 'engine-custom repo'; Path = (Join-Path $EngineCustomDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
-    @{ Name = 'engine-chromium repo'; Path = (Join-Path $EngineChromiumDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
-    @{ Name = 'engine-cef repo'; Path = (Join-Path $EngineCefDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' }
+    @{ Name = 'browser repo'; Kind = 'cmake'; Path = (Join-Path $BrowserDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
+    @{ Name = 'core repo'; Kind = 'populated-dir'; Path = $CoreDir; Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
+    @{ Name = 'engine-custom repo'; Kind = 'cmake'; Path = (Join-Path $EngineCustomDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
+    @{ Name = 'engine-chromium repo'; Kind = 'cmake'; Path = (Join-Path $EngineChromiumDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' },
+    @{ Name = 'engine-cef repo'; Kind = 'cmake'; Path = (Join-Path $EngineCefDir 'CMakeLists.txt'); Fix = 'Run .\bootstrap.ps1 (or `git submodule update --init --recursive`) from the workspace root.' }
 )) {
-    if (-not (Test-Path $entry.Path)) {
+    if ($entry.Kind -eq 'populated-dir') {
+        if (-not (Test-RepoPopulated $entry.Path)) {
+            Add-Issue $issues $entry.Name "Missing or empty repo directory: $($entry.Path)" $entry.Fix
+        }
+    }
+    elseif (-not (Test-Path $entry.Path)) {
         Add-Issue $issues $entry.Name "Missing expected file: $($entry.Path)" $entry.Fix
     }
 }

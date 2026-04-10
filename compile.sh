@@ -150,6 +150,21 @@ require_dir_with_file() {
   fi
 }
 
+require_populated_dir() {
+  local dir="$1"
+  local label="$2"
+  if [[ ! -d "$dir" ]]; then
+    echo "Missing $label directory at $dir" >&2
+    echo "Run ./bootstrap.sh first (or git submodule update --init --recursive)." >&2
+    exit 1
+  fi
+  if [[ -z "$(find "$dir" -mindepth 1 -maxdepth 1 -print -quit 2>/dev/null)" ]]; then
+    echo "$label exists but appears empty: $dir" >&2
+    echo "Run ./bootstrap.sh first (or git submodule update --init --recursive)." >&2
+    exit 1
+  fi
+}
+
 bootstrap_workspace() {
   echo "==> Bootstrapping workspace"
   git -C "$ROOT_DIR" submodule update --init --recursive
@@ -223,7 +238,7 @@ if [[ "$BOOTSTRAP" -eq 1 ]]; then
 fi
 
 require_dir_with_file "$BROWSER_DIR" "CMakeLists.txt" "browser repo"
-require_dir_with_file "$CORE_DIR" "CMakeLists.txt" "core repo"
+require_populated_dir "$CORE_DIR" "core repo"
 require_dir_with_file "$ENGINE_CUSTOM_DIR" "CMakeLists.txt" "engine-custom repo"
 require_dir_with_file "$ENGINE_CHROMIUM_DIR" "CMakeLists.txt" "engine-chromium repo"
 require_dir_with_file "$ENGINE_CEF_DIR" "CMakeLists.txt" "engine-cef repo"

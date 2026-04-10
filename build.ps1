@@ -32,6 +32,13 @@ function Require-Command([string]$Name) {
 Require-Command git
 Require-Command cmake
 
+function Test-RepoPopulated([string]$RepoPath) {
+    if (-not (Test-Path $RepoPath -PathType Container)) {
+        return $false
+    }
+    return $null -ne (Get-ChildItem -Force -ErrorAction SilentlyContinue $RepoPath | Select-Object -First 1)
+}
+
 $RepoRoot = (Resolve-Path $RepoRoot).Path
 $BrowserDir = Join-Path $RepoRoot 'browser'
 $CoreDir = Join-Path $RepoRoot 'core'
@@ -42,7 +49,6 @@ $BuildRoot = Join-Path $BrowserDir 'build'
 
 foreach ($path in @(
     (Join-Path $BrowserDir 'CMakeLists.txt'),
-    (Join-Path $CoreDir 'CMakeLists.txt'),
     (Join-Path $EngineCustomDir 'CMakeLists.txt'),
     (Join-Path $EngineChromiumDir 'CMakeLists.txt'),
     (Join-Path $EngineCefDir 'CMakeLists.txt')
@@ -50,6 +56,10 @@ foreach ($path in @(
     if (-not (Test-Path $path)) {
         throw "Missing expected workspace path: $path`nRun .\\bootstrap.ps1 first or initialize submodules."
     }
+}
+
+if (-not (Test-RepoPopulated $CoreDir)) {
+    throw "Missing expected populated workspace repo: $CoreDir`nRun .\\bootstrap.ps1 first or initialize submodules."
 }
 
 if ($Bootstrap) {

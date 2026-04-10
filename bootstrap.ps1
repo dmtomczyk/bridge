@@ -17,6 +17,13 @@ function Require-Command([string]$Name) {
 
 Require-Command git
 
+function Test-RepoPopulated([string]$RepoPath) {
+    if (-not (Test-Path $RepoPath -PathType Container)) {
+        return $false
+    }
+    return $null -ne (Get-ChildItem -Force -ErrorAction SilentlyContinue $RepoPath | Select-Object -First 1)
+}
+
 $RepoRoot = (Resolve-Path $RepoRoot).Path
 
 Write-Step 'Initializing Bridge workspace submodules'
@@ -27,12 +34,24 @@ if ($Update) {
     & git -C $RepoRoot submodule update --remote --recursive
 }
 
-foreach ($repo in @('core', 'browser', 'engine-custom', 'engine-chromium', 'engine-cef')) {
-    $cmakePath = Join-Path (Join-Path $RepoRoot $repo) 'CMakeLists.txt'
-    if (-not (Test-Path $cmakePath)) {
-        throw "Missing expected repo or CMakeLists.txt: $cmakePath"
+$repoChecks = @(
+    @{ Name = 'core'; Type = 'populated-dir'; Path = (Join-Path $RepoRoot 'core') },
+    @{ Name = 'browser'; Type = 'cmake'; Path = (Join-Path $RepoRoot 'browser\CMakeLists.txt') },
+    @{ Name = 'engine-custom'; Type = 'cmake'; Path = (Join-Path $RepoRoot 'engine-custom\CMakeLists.txt') },
+    @{ Name = 'engine-chromium'; Type = 'cmake'; Path = (Join-Path $RepoRoot 'engine-chromium\CMakeLists.txt') },
+    @{ Name = 'engine-cef'; Type = 'cmake'; Path = (Join-Path $RepoRoot 'engine-cef\CMakeLists.txt') }
+)
+
+foreach ($check in $repoChecks) {
+    if ($check.Type -eq 'populated-dir') {
+        if (-not (Test-RepoPopulated $check.Path)) {
+            throw "Missing expected populated repo directory: $($check.Path)"
+        }
     }
-    Write-Host "ok: $repo"
+    elseif (-not (Test-Path $check.Path)) {
+        throw "Missing expected repo file: $($check.Path)"
+    }
+    Write-Host "ok: $($check.Name)"
 }
 
 Write-Host ''
